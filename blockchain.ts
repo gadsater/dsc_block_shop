@@ -62,7 +62,6 @@ const makeTransaction = (user: User, data: String): Transaction => {
 };
 
 const makeBlock = (prevBlockHash: String, transactions: Map<String, Transaction>): Block => {
-  const hashdigest = sha256(nonce(64) + JSON.stringify(transactions));
   let block: Block = {
     prevBlockHash: prevBlockHash,
     transactions: transactions
