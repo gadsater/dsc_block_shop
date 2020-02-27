@@ -1,6 +1,5 @@
 import sha256 from "crypto-js/sha256";
 import CryptoJS from "crypto-js";
-import * as _ from "lodash";
 
 const GenesisHash = "0x0000000000000000000000000000000000000000000000000000000000000000";
 

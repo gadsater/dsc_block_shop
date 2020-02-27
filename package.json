@@ -10,8 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "@types/crypto-js": "^3.1.43",
-    "@types/lodash": "^4.14.149",
-    "crypto-js": "^4.0.0",
-    "lodash": "^4.17.15"
+    "crypto-js": "^4.0.0"
   }
 }
