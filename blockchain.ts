@@ -30,7 +30,6 @@ let BlockChainDSC: Blockchain = {
   blocks: new Map()
 }
 
-
 const nonce = (length: Number) => {
   let text = "";
   let possible =
@@ -67,3 +66,5 @@ const makeBlock = (prevBlockHash: String, transactions: Map<String, Transaction>
   };
   return block;
 }
+
+export { BlockChainDSC, makeUser, makeTransaction, makeBlock }

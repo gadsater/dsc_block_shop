@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc blockchain.ts -w --esModuleInterop --lib es2016"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "GA Dhanush, Siddharth S",
+  "license": "MIT",
   "dependencies": {
     "@types/crypto-js": "^3.1.43",
     "crypto-js": "^4.0.0"
