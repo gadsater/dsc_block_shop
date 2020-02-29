@@ -1,18 +1,32 @@
-var app = require('express')();
-var http = require('http').createServer(app);
-var io = require('socket.io')(http);
+let app = require('express')();
+let http = require('http').createServer(app);
+let io = require('socket.io')(http);
+
+let bchain =  require('./blockchain.js');
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/index.html'); 
 });
 
+app.get('/two', (req, res) => {
+    res.sendFile(__dirname + '/clone.html');
+});
+
+let uuid, user
 io.on('connection', socket => {
-    let id = socket.id
-    console.log(id, 'connected');
-    socket.broadcast.emit('peerConnect', id);
+    
+    socket.on('initUser', data => {
+        uuid = data['uuid']
+        user = bchain.makeUser(socket.id, uuid)
+        console.log('user:', user)
+        console.log(uuid, 'connected');
+    })
+
+    socket.broadcast.emit('peerConnect', uuid);
+
     socket.on('disconnect', () => {
-        console.log(id, 'disconnected');
-        socket.broadcast.emit('peerDisconnect', id);
+        console.log(uuid, 'disconnected');
+        socket.broadcast.emit('peerDisconnect', uuid);
     });
 });
 

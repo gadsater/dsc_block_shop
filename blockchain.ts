@@ -18,6 +18,7 @@ interface Transaction {
 interface Block {
   readonly prevBlockHash: String;
   readonly transactions: Map<String, Transaction>;
+  readonly currBlockHash: string;
 }
 
 interface Blockchain {
@@ -40,12 +41,12 @@ const nonce = (length: Number) => {
   return text;
 };
 
-const makeUser = (ipaddr: String, name: String): User => ({
+export const makeUser = (ipaddr: String, name: String): User => ({
   name: name,
   ipaddr: ipaddr
 });
 
-const makeTransaction = (user: User, data: String): Transaction => {
+export const makeTransaction = (user: User, data: String): Transaction => {
   const dateObj = new Date();
   const timestamp = dateObj.getDate();
   let transaction = {
@@ -59,12 +60,13 @@ const makeTransaction = (user: User, data: String): Transaction => {
   return transaction;
 };
 
-const makeBlock = (prevBlockHash: String, transactions: Map<String, Transaction>): Block => {
-  let block: Block = {
+export const makeBlock = (prevBlockHash: String, transactions: Map<String, Transaction>): Block => {
+  let block = {
     prevBlockHash: prevBlockHash,
-    transactions: transactions
+    transactions: transactions,
+    currBlockHash: ""
   };
+  const hashdigest = sha256(nonce(64) + JSON.stringify(block));
+  block["currBlockHash"] = hashdigest.toString(CryptoJS.enc.Hex);
   return block;
 }
-
-export { BlockChainDSC, makeUser, makeTransaction, makeBlock }

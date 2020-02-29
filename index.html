@@ -8,16 +8,29 @@
 </head>
 
 <body>
-
+    <script>
+        if (localStorage.getItem('uuid') == null) {
+            let uuid = Math.floor(Math.random() * 100000);
+            localStorage.setItem("uuid", uuid);
+        }
+    </script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        let socket = io();
+        const socket = io();
+
         socket.on('connect', () => {
-            console.log('My ID:', socket.id);
+            console.log('My socket ID:', socket.id);
+            console.log('My UUID:', localStorage.getItem("uuid"));
+
+            socket.emit('initUser', {
+                uuid: localStorage.getItem("uuid")
+            })
         });
+
         socket.on('peerConnect', data => {
             console.log(data, 'connected');
         });
+
         socket.on('peerDisconnect', data => {
             console.log(data, 'disconnected');
         });

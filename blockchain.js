@@ -10,7 +10,6 @@ var BlockChainDSC = {
     blockTransactLimit: 20,
     blocks: new Map()
 };
-exports.BlockChainDSC = BlockChainDSC;
 var nonce = function (length) {
     var text = "";
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -19,12 +18,11 @@ var nonce = function (length) {
     }
     return text;
 };
-var makeUser = function (ipaddr, name) { return ({
+exports.makeUser = function (ipaddr, name) { return ({
     name: name,
     ipaddr: ipaddr
 }); };
-exports.makeUser = makeUser;
-var makeTransaction = function (user, data) {
+exports.makeTransaction = function (user, data) {
     var dateObj = new Date();
     var timestamp = dateObj.getDate();
     var transaction = {
@@ -37,12 +35,13 @@ var makeTransaction = function (user, data) {
     transaction["hashdigest"] = hashdigest.toString(crypto_js_1["default"].enc.Hex);
     return transaction;
 };
-exports.makeTransaction = makeTransaction;
-var makeBlock = function (prevBlockHash, transactions) {
+exports.makeBlock = function (prevBlockHash, transactions) {
     var block = {
         prevBlockHash: prevBlockHash,
-        transactions: transactions
+        transactions: transactions,
+        currBlockHash: ""
     };
+    var hashdigest = sha256_1["default"](nonce(64) + JSON.stringify(block));
+    block["currBlockHash"] = hashdigest.toString(crypto_js_1["default"].enc.Hex);
     return block;
 };
-exports.makeBlock = makeBlock;
