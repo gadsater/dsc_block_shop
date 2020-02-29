@@ -28,6 +28,10 @@ io.on('connection', socket => {
         console.log(uuid, 'disconnected');
         socket.broadcast.emit('peerDisconnect', uuid);
     });
+
+    socket.on('makeTransaction', data => {
+        console.log('Transaction:', data);
+    });
 });
 
 http.listen(3000, () => {

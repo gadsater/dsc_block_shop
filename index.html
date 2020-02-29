@@ -34,6 +34,12 @@
         socket.on('peerDisconnect', data => {
             console.log(data, 'disconnected');
         });
+
+        const makeTransaction = data => {
+            socket.emit('makeTransaction', data => {
+                console.log('Transaction initiated:', data)
+            });
+        }
     </script>
 </body>
 
