@@ -6,7 +6,7 @@ exports.__esModule = true;
 var sha256_1 = __importDefault(require("crypto-js/sha256"));
 var crypto_js_1 = __importDefault(require("crypto-js"));
 var GenesisHash = "0x0000000000000000000000000000000000000000000000000000000000000000";
-var BlockChainDSC = {
+exports.BlockChainDSC = {
     blockTransactLimit: 20,
     blocks: new Map()
 };

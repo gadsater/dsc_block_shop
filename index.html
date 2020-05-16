@@ -5,9 +5,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Socketing</title>
+    <link rel="stylesheet" href="/wingcss/dist/wing.min.css" />
+    <script src="/vue/dist/vue.js"></script>
 </head>
 
-<body>
+<style>
+    body {
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
+</style>
+
+<body class="full-screen center">
+    <div class="contents" id="app">
+        <h1>P2P data transfer app</h1>
+        <h3> My ID: {{ uuid }} </h3>
+        <div>
+            <input type="text" placeholder="Enter your message here" v-model="message"/>
+        </div>
+
+        <button onclick="sendMessage()">
+            Send message to peers
+        </button>
+
+        <button onclick="resetId()">Reset my ID</button>
+        <br>
+        <ul v-for="msg in recvd">
+            <li>{{msg.sender}} says: {{msg.data}}</li>
+        </ul>
+    </div>
+
     <script>
         if (localStorage.getItem('uuid') == null) {
             let uuid = Math.floor(Math.random() * 100000);
@@ -17,29 +48,66 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
+        let peers = []
 
+        // setup socket connection and listeners
         socket.on('connect', () => {
             console.log('My socket ID:', socket.id);
             console.log('My UUID:', localStorage.getItem("uuid"));
 
+            // initialize the user with a uuid specific to each user
             socket.emit('initUser', {
                 uuid: localStorage.getItem("uuid")
             })
         });
 
+        // fired when a peer joins the network 
         socket.on('peerConnect', data => {
             console.log(data, 'connected');
         });
 
+        // fire when a peer leaves the network
         socket.on('peerDisconnect', data => {
             console.log(data, 'disconnected');
         });
 
-        const makeTransaction = data => {
-            socket.emit('makeTransaction', data => {
-                console.log('Transaction initiated:', data)
-            });
+        socket.on('incomingMsg', data => {
+            console.log(data.sender, 'says', data.data);
+            app.$data.recvd.push(data)
+        });
+
+
+        // methods to talk to server
+
+        // make a transaction on the main chain
+        const sendMessage = () => {
+            let data = {
+                'data': app.$data.message,
+                'sender': localStorage.getItem("uuid")
+            }
+            socket.emit('sendMessage', data);
+            app.$data.recvd.push(data)
+            console.log("Message sent:", data.data)
         }
+
+        const resetId = () => {
+            let uuid = Math.floor(Math.random() * 100000);
+            localStorage.setItem("uuid", uuid);
+            app.$data.uuid = uuid;
+            console.log('New ID:', uuid)
+            socket.emit('initUser', {
+                uuid: localStorage.getItem("uuid")
+            })
+        }
+
+        const app = new Vue({
+            el: '#app',
+            data: {
+                message: '',
+                recvd: [],
+                uuid: localStorage.getItem("uuid")
+            }
+        })
     </script>
 </body>
 

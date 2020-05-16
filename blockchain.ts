@@ -26,7 +26,7 @@ interface Blockchain {
   blocks: Map<String, Block>;
 }
 
-let BlockChainDSC: Blockchain = {
+export let BlockChainDSC: Blockchain = {
   blockTransactLimit: 20,
   blocks: new Map()
 }
